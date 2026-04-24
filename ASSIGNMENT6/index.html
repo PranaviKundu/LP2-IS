@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Diffie-Hellman Key Exchange</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        line-height: 1.6;
+        padding: 20px;
+        max-width: 600px;
+      }
+      .box {
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+      }
+      input {
+        padding: 8px;
+        width: 100px;
+        margin: 5px 0;
+      }
+      button {
+        padding: 10px 15px;
+        background: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .result {
+        font-weight: bold;
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Diffie-Hellman Key Exchange</h2>
+
+    <div class="box">
+      <h3>Step 1: Public Constants</h3>
+      <p>Prime (P): <b>23</b>, Generator (G): <b>5</b></p>
+    </div>
+
+    <div class="box">
+      <h3>Step 2: Alice (You)</h3>
+      <label>Enter your Secret Number (a):</label><br />
+      <input type="number" id="aliceSecret" value="6" />
+      <button onclick="runExchange()">Calculate Shared Secret</button>
+    </div>
+
+    <div class="box" id="output" style="display: none">
+      <h3>Final Results</h3>
+      <p>
+        Alice's Public Key (A = G<sup>a</sup> mod P):
+        <span id="alicePublic" class="result"></span>
+      </p>
+      <p>
+        Bob's Secret Number (b): <span id="bobSecret" class="result">15</span>
+      </p>
+      <p>
+        Bob's Public Key (B = G<sup>b</sup> mod P):
+        <span id="bobPublic" class="result"></span>
+      </p>
+      <hr />
+      <p>
+        <b>Shared Secret (K):</b>
+        <span
+          id="sharedSecret"
+          class="result"
+          style="color: red; font-size: 20px"
+        ></span>
+      </p>
+    </div>
+
+    <script>
+      function runExchange() {
+        // Publicly known values
+        const P = 23;
+        const G = 5;
+
+        // Alice's Side (User)
+        let a = parseInt(document.getElementById("aliceSecret").value);
+        // Formula: G^a mod P
+        let A = Math.pow(G, a) % P;
+
+        // Bob's Side (Application)
+        let b = 15; // Bob's hidden secret
+        let B = Math.pow(G, b) % P;
+
+        // Calculating Shared Secret
+        // Alice's side: K = B^a mod P
+        let aliceK = Math.pow(B, a) % P;
+
+        // Bob's side: K = A^b mod P
+        let bobK = Math.pow(A, b) % P;
+
+        // Display
+        document.getElementById("output").style.display = "block";
+        document.getElementById("alicePublic").innerText = A;
+        document.getElementById("bobPublic").innerText = B;
+        document.getElementById("sharedSecret").innerText = aliceK;
+      }
+    </script>
+  </body>
+</html>
